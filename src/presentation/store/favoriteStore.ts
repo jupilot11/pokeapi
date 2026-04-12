@@ -1,12 +1,17 @@
-import { create } from 'zustand';
-import type { Pokemon } from '@/src/domain/entities/pokemon';
-import { storage } from '@/src/core/utils/storage';
-import { STORAGE_KEYS } from '@/src/core/constants/app';
+import { STORAGE_KEYS } from "@/src/core/constants/app";
+import { storage } from "@/src/core/utils/storage";
+import type { Pokemon } from "@/src/domain/entities/pokemon";
+import { create } from "zustand";
 
 interface FavoriteStore {
   favorites: Pokemon[];
+  error: string | null;
+  searchQuery: string;
+  searchResults: Pokemon[];
   isHydrated: boolean;
 
+  setSearchQuery: (query: string) => void;
+  search: (query: string) => Promise<void>;
   hydrate: () => Promise<void>;
   toggleFavorite: (pokemon: Pokemon) => Promise<void>;
   isFavorite: (id: number) => boolean;
@@ -15,6 +20,11 @@ interface FavoriteStore {
 export const useFavoriteStore = create<FavoriteStore>((set, get) => ({
   favorites: [],
   isHydrated: false,
+  searchQuery: "",
+  searchResults: [],
+  error: null,
+
+  setSearchQuery: (query) => set({ searchQuery: query }),
 
   /** Called once on app start to restore persisted favorites. */
   hydrate: async () => {
@@ -31,6 +41,22 @@ export const useFavoriteStore = create<FavoriteStore>((set, get) => ({
 
     set({ favorites: updated });
     await storage.set(STORAGE_KEYS.FAVORITES, updated);
+  },
+
+  search: async (query) => {
+    const current = get().favorites;
+    const results = current.filter((p) =>
+      p.name.toLowerCase().includes(query.toLowerCase()),
+    );
+
+    if (results.length === 0) {
+      set({ error: `No favorites match "${query}".`, searchResults: [] });
+      return;
+    }
+    set({
+      searchQuery: query,
+      searchResults: results,
+    });
   },
 
   isFavorite: (id) => get().favorites.some((p) => p.id === id),

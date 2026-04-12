@@ -1,6 +1,6 @@
-import { useEffect, useRef, useCallback, useState } from 'react';
-import { usePokemonStore } from '../store/pokemonStore';
-import { debounce } from '@/src/core/utils/debounce';
+import { debounce } from "@/src/core/utils/debounce";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { usePokemonStore } from "../store/pokemonStore";
 
 // Only fire a search after the user has stopped typing for this long
 const SEARCH_DEBOUNCE_MS = 600;
@@ -27,7 +27,7 @@ export function usePokemonList() {
   // isSearchMode is based on this — not on searchQuery — so the list only
   // switches away from pokemonList after the debounce fires, not on every
   // keystroke.
-  const [committedQuery, setCommittedQuery] = useState('');
+  const [committedQuery, setCommittedQuery] = useState("");
 
   // Keep a ref to the latest search action so the debounced closure never
   // holds a stale reference (Zustand actions are stable, but this is safer).
@@ -56,7 +56,7 @@ export function usePokemonList() {
       setSearchQuery(query);
       if (!query.trim()) {
         debouncedSearch.cancel(); // stop the pending timer before it fires
-        setCommittedQuery('');
+        setCommittedQuery("");
         clearSearch();
         return;
       }
