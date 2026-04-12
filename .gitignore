@@ -33,6 +33,12 @@ yarn-error.*
 # local env files
 .env*.local
 
+# VSCode local overrides (machine-specific, not shared)
+.vscode/settings.local.json
+
+# Claude Code project memory (personal, not team config)
+.claude/
+
 # typescript
 *.tsbuildinfo
 
