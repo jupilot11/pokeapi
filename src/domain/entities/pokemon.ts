@@ -40,7 +40,7 @@ export interface PokemonMove {
 
 /** Full Pokémon detail including species data and evolution chain. */
 export interface PokemonDetailFull extends PokemonDetail {
-  description: string;
+  descriptions: string[];
   genus: string;
   evolutionChain: EvolutionStep[];
   moves: PokemonMove[];

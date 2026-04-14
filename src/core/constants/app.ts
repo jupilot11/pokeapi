@@ -1,6 +1,6 @@
 export const STORAGE_KEYS = {
   FAVORITES: "@pokeapi:favorites",
-  POKEMON_DETAIL_CACHE: "@pokeapi:detail-cache",
+  POKEMON_DETAIL_CACHE: "@pokeapi:detail-cache-v2",
 } as const;
 
 /** Pokémon type → background color mapping */

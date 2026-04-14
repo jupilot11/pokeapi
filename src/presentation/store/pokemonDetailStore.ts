@@ -44,7 +44,7 @@ export const usePokemonDetailStore = create<PokemonDetailStore>((set, get) => ({
       return;
     }
 
-    set({ isLoading: true, error: null });
+    set({ isLoading: true, error: null, currentId: null });
 
     try {
       const data = await getPokemonDetailFullUseCase.execute(idOrName);

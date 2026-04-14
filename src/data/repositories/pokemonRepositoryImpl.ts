@@ -162,13 +162,17 @@ function mapToDetailFull(
 ): PokemonDetailFull {
   const base = mapDetailToFullEntity(dto);
 
-  // Extract English flavor text; clean special whitespace characters from the API
-  const descEntry = species?.flavor_text_entries.find(
-    (e) => e.language.name === 'en',
+  // Collect all unique English flavor texts; clean special whitespace characters from the API
+  const descriptions = Array.from(
+    new Set(
+      (species?.flavor_text_entries ?? [])
+        .filter((e) => e.language.name === 'en')
+        .map((e) =>
+          e.flavor_text.replace(/[\n\f\u000c\u00ad]/g, ' ').replace(/\s+/g, ' ').trim(),
+        )
+        .filter(Boolean),
+    ),
   );
-  const description = descEntry
-    ? descEntry.flavor_text.replace(/[\n\f\u000c\u00ad]/g, ' ').replace(/\s+/g, ' ').trim()
-    : '';
 
   // Extract English genus (e.g. "Seed Pokémon")
   const genusEntry = species?.genera.find((g) => g.language.name === 'en');
@@ -194,7 +198,7 @@ function mapToDetailFull(
     })
     .sort((a, b) => a.levelLearned - b.levelLearned);
 
-  return { ...base, description, genus, evolutionChain, moves };
+  return { ...base, descriptions, genus, evolutionChain, moves };
 }
 
 /**
