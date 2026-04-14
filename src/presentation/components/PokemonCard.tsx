@@ -1,38 +1,41 @@
-import React, { useCallback } from 'react';
+import { COLORS, TYPE_COLORS } from "@/src/core/constants/app";
+import { formatName, formatPokemonId } from "@/src/core/utils/pokemon";
+import type { Pokemon } from "@/src/domain/entities/pokemon";
+import { Image } from "expo-image";
+import { router } from "expo-router";
+import React, { useCallback } from "react";
 import {
   Dimensions,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-} from 'react-native';
-import { Image } from 'expo-image';
-import { router } from 'expo-router';
-import type { Pokemon } from '@/src/domain/entities/pokemon';
-import { formatName, formatPokemonId } from '@/src/core/utils/pokemon';
-import { TYPE_COLORS, COLORS } from '@/src/core/constants/app';
-import { PokemonTypeTag } from './PokemonTypeTag';
-import { FavoriteButton } from './FavoriteButton';
-import { useFavorites } from '../hooks/useFavorites';
-import { useFavoriteStore } from '../store/favoriteStore';
+} from "react-native";
+import { useFavorites } from "../hooks/useFavorites";
+import { useFavoriteStore } from "../store/favoriteStore";
+import { FavoriteButton } from "./FavoriteButton";
+import { PokemonTypeTag } from "./PokemonTypeTag";
 
 interface Props {
   pokemon: Pokemon;
 }
 
-const CARD_WIDTH = (Dimensions.get('window').width - 48) / 2;
+const CARD_WIDTH = (Dimensions.get("window").width - 48) / 2;
 
 export const PokemonCard = React.memo(function PokemonCard({ pokemon }: Props) {
   const { toggleFavorite } = useFavorites();
   // Selector-based subscription: Zustand re-renders this card only when
   // THIS Pokémon's favorite status changes, not on every favorites update.
   const favorite = useFavoriteStore(
-    useCallback((s) => s.favorites.some((f) => f.id === pokemon.id), [pokemon.id]),
+    useCallback(
+      (s) => s.favorites.some((f) => f.id === pokemon.id),
+      [pokemon.id],
+    ),
   );
 
   const bgColor =
     pokemon.types.length > 0
-      ? TYPE_COLORS[pokemon.types[0]] ?? COLORS.skeleton
+      ? (TYPE_COLORS[pokemon.types[0]] ?? COLORS.skeleton)
       : COLORS.skeleton;
 
   const handlePress = useCallback(() => {
@@ -51,7 +54,11 @@ export const PokemonCard = React.memo(function PokemonCard({ pokemon }: Props) {
     >
       <View style={styles.header}>
         <Text style={styles.id}>{formatPokemonId(pokemon.id)}</Text>
-        <FavoriteButton isFavorite={favorite} onToggle={handleFavorite} size={20} />
+        <FavoriteButton
+          isFavorite={favorite}
+          onToggle={handleFavorite}
+          size={20}
+        />
       </View>
 
       <Image
@@ -82,43 +89,44 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 12,
     marginBottom: 12,
-    overflow: 'hidden',
-    shadowColor: '#000',
+    overflow: "hidden",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.12,
     shadowRadius: 6,
     elevation: 4,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 4,
   },
   id: {
     fontSize: 11,
-    fontWeight: '700',
-    color: 'rgba(0,0,0,0.35)',
+    fontWeight: "700",
+    color: "rgba(0,0,0,0.35)",
   },
   image: {
-    width: '100%',
+    width: "100%",
     height: 100,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   footer: {
     marginTop: 6,
   },
   name: {
     fontSize: 14,
-    fontWeight: '700',
-    color: '#fff',
+    fontWeight: "700",
+    color: "#fff",
     marginBottom: 6,
-    textShadowColor: 'rgba(0,0,0,0.2)',
+    textShadowColor: "rgba(0,0,0,0.2)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
   },
   types: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "flex-start",
   },
 });

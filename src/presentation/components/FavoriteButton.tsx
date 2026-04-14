@@ -25,7 +25,7 @@ export const FavoriteButton = React.memo(function FavoriteButton({
       <Ionicons
         name={isFavorite ? 'heart' : 'heart-outline'}
         size={size}
-        color={isFavorite ? '#E63946' : '#999'}
+        color={isFavorite ? '#fff' : 'rgba(255,255,255,0.65)'}
       />
     </TouchableOpacity>
   );
@@ -35,5 +35,8 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.18)',
+    borderRadius: 12,
+    padding: 3,
   },
 });

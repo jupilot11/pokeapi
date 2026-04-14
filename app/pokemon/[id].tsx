@@ -11,18 +11,19 @@ import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import {
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function PokemonDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data, isLoading, error } = usePokemonDetail(id);
   const { isFavorite, toggleFavorite } = useFavorites();
+  const insets = useSafeAreaInsets();
 
   if (isLoading) return <Loader fullScreen />;
   if (error || !data) {
@@ -44,31 +45,39 @@ export default function PokemonDetailScreen() {
       showsVerticalScrollIndicator={false}
     >
       {/* Hero section */}
-      <View style={[styles.hero, { backgroundColor: bgColor }]}>
-        {/* Back button */}
-        <TouchableOpacity
-          style={styles.backBtn}
-          onPress={() => router.back()}
-          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-        >
-          <Ionicons name="arrow-back" size={24} color="#fff" />
-        </TouchableOpacity>
+      <View
+        style={[
+          styles.hero,
+          { backgroundColor: bgColor, paddingTop: insets.top + 8 },
+        ]}
+      >
+        {/* Appbar row */}
+        <View style={styles.appBar}>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
+            <Ionicons name="arrow-back" size={24} color="#fff" />
+          </TouchableOpacity>
 
-        {/* Favorite button */}
-        <TouchableOpacity
-          style={styles.favoriteBtn}
-          onPress={() => toggleFavorite(data)}
-          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-        >
-          <Ionicons
-            name={favorite ? "heart" : "heart-outline"}
-            size={26}
-            color={favorite ? "#FF6B6B" : "#fff"}
-          />
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => toggleFavorite(data)}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
+            <Ionicons
+              name={favorite ? "heart" : "heart-outline"}
+              size={26}
+              color={"#fff"}
+            />
+          </TouchableOpacity>
+        </View>
 
-        <Text style={styles.idLabel}>{formatPokemonId(data.id)}</Text>
-        <Text style={styles.heroName}>{formatName(data.name)}</Text>
+        {/* Name + ID row */}
+        <View style={styles.nameRow}>
+          <Text style={styles.heroName}>{formatName(data.name)}</Text>
+          <Text style={styles.idLabel}>{formatPokemonId(data.id)}</Text>
+        </View>
 
         <View style={styles.typesRow}>
           {data.types.map((t) => (
@@ -144,39 +153,37 @@ const styles = StyleSheet.create({
 
   // Hero
   hero: {
-    paddingTop: Platform.OS === "ios" ? 56 : 32,
     paddingHorizontal: 24,
     paddingBottom: 0,
     alignItems: "center",
-    position: "relative",
     borderBottomLeftRadius: 32,
     borderBottomRightRadius: 32,
   },
-  backBtn: {
-    position: "absolute",
-    top: Platform.OS === "ios" ? 56 : 16,
-    left: 20,
-    zIndex: 10,
-    padding: 4,
+  appBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    paddingVertical: 8,
   },
-  favoriteBtn: {
-    position: "absolute",
-    top: Platform.OS === "ios" ? 56 : 16,
-    right: 20,
-    zIndex: 10,
-    padding: 4,
+  nameRow: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "space-between",
+    width: "100%",
+    marginTop: 4,
   },
   idLabel: {
-    color: "rgba(255,255,255,0.6)",
-    fontSize: 14,
+    color: "rgba(255,255,255,0.75)",
+    fontSize: 16,
     fontWeight: "700",
-    marginTop: 8,
+    marginBottom: 6,
   },
   heroName: {
     color: "#fff",
     fontSize: 30,
     fontWeight: "800",
-    marginTop: 4,
+    flexShrink: 1,
     textShadowColor: "rgba(0,0,0,0.15)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 4,
@@ -185,7 +192,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 10,
     flexWrap: "wrap",
-    justifyContent: "center",
+    justifyContent: "flex-start",
+    width: "100%",
   },
   heroImage: {
     width: 200,
@@ -268,5 +276,12 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     color: COLORS.textPrimary,
     marginBottom: 14,
+  },
+  button: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(0,0,0,0.18)",
+    borderRadius: 12,
+    padding: 3,
   },
 });

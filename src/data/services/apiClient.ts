@@ -7,12 +7,27 @@ const apiClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Response interceptor: unwrap data, normalize errors
+// Request logger
+apiClient.interceptors.request.use((config) => {
+  const method = config.method?.toUpperCase() ?? 'GET';
+  console.log(`[API] --> ${method} ${config.baseURL ?? ''}${config.url ?? ''}`);
+  return config;
+});
+
+// Response interceptor: log + unwrap data, normalize errors
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    const { config, status } = response;
+    const method = config.method?.toUpperCase() ?? 'GET';
+    console.log(`[API] <-- ${status} ${method} ${config.url ?? ''}`);
+    return response;
+  },
   (error) => {
     if (axios.isAxiosError(error)) {
       const status = error.response?.status;
+      const method = error.config?.method?.toUpperCase() ?? 'GET';
+      const url = error.config?.url ?? '';
+      console.warn(`[API] ERR ${method} ${url} — ${status ?? error.code ?? error.message}`);
       if (status === 404) {
         return Promise.reject(new Error('Not found'));
       }
