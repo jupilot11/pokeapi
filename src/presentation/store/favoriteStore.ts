@@ -44,18 +44,17 @@ export const useFavoriteStore = create<FavoriteStore>((set, get) => ({
   },
 
   search: async (query) => {
+    if (!query.trim()) {
+      set({ searchResults: [], error: null });
+      return;
+    }
     const current = get().favorites;
     const results = current.filter((p) =>
       p.name.toLowerCase().includes(query.toLowerCase()),
     );
-
-    if (results.length === 0) {
-      set({ error: `No favorites match "${query}".`, searchResults: [] });
-      return;
-    }
     set({
-      searchQuery: query,
       searchResults: results,
+      error: results.length === 0 ? `No favorites match "${query}".` : null,
     });
   },
 

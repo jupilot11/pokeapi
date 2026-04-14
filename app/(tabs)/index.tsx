@@ -4,6 +4,7 @@ import { EmptyState } from "@/src/presentation/components/EmptyState";
 import { ErrorState } from "@/src/presentation/components/ErrorState";
 import { Loader } from "@/src/presentation/components/Loader";
 import { PokemonCard } from "@/src/presentation/components/PokemonCard";
+import { ScreenHeader } from "@/src/presentation/components/ScreenHeader";
 import { SearchBar } from "@/src/presentation/components/SearchBar";
 import { usePokemonList } from "@/src/presentation/hooks/usePokemonList";
 import React, { useCallback } from "react";
@@ -52,7 +53,9 @@ export default function PokedexScreen() {
     ) : null;
 
   return (
-    <SafeAreaView style={styles.container} edges={["bottom", "left", "right"]}>
+    <SafeAreaView style={styles.container} edges={["top", "bottom", "left", "right"]}>
+      <ScreenHeader title="Pokédex" />
+
       {/*
         SearchBar lives OUTSIDE FlatList so it is never unmounted when the
         list re-renders. Putting it inside ListHeaderComponent causes FlatList
@@ -87,6 +90,9 @@ export default function PokedexScreen() {
             onEndReached={!isSearchMode ? loadMore : undefined}
             onEndReachedThreshold={0.4}
             removeClippedSubviews
+            windowSize={8}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="on-drag"
             showsVerticalScrollIndicator={false}

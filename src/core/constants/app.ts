@@ -1,5 +1,6 @@
 export const STORAGE_KEYS = {
   FAVORITES: "@pokeapi:favorites",
+  POKEMON_DETAIL_CACHE: "@pokeapi:detail-cache",
 } as const;
 
 /** Pokémon type → background color mapping */
@@ -52,4 +53,21 @@ export const COLORS = {
   textSecondary: "#757575",
   border: "#E0E0E0",
   skeleton: "#E0E0E0",
+} as const;
+
+export const SPACING = {
+  xs: 4,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 24,
+  xxl: 32,
+} as const;
+
+export const RADIUS = {
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 24,
+  full: 999,
 } as const;

@@ -1,5 +1,6 @@
 import { debounce } from "@/src/core/utils/debounce";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useShallow } from "zustand/shallow";
 import { usePokemonStore } from "../store/pokemonStore";
 
 // Only fire a search after the user has stopped typing for this long
@@ -21,7 +22,24 @@ export function usePokemonList() {
     setSearchQuery,
     search,
     clearSearch,
-  } = usePokemonStore();
+  } = usePokemonStore(
+    useShallow((s) => ({
+      pokemonList: s.pokemonList,
+      isLoading: s.isLoading,
+      isLoadingMore: s.isLoadingMore,
+      error: s.error,
+      hasNextPage: s.hasNextPage,
+      searchQuery: s.searchQuery,
+      searchResults: s.searchResults,
+      isSearching: s.isSearching,
+      searchError: s.searchError,
+      fetchInitial: s.fetchInitial,
+      loadMore: s.loadMore,
+      setSearchQuery: s.setSearchQuery,
+      search: s.search,
+      clearSearch: s.clearSearch,
+    })),
+  );
 
   // Tracks the query that was actually submitted to the search use-case.
   // isSearchMode is based on this — not on searchQuery — so the list only

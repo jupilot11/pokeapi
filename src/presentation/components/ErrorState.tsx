@@ -1,6 +1,7 @@
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { COLORS } from '@/src/core/constants/app';
+import { COLORS } from "@/src/core/constants/app";
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface Props {
   message?: string;
@@ -8,16 +9,28 @@ interface Props {
 }
 
 export function ErrorState({
-  message = 'Something went wrong.',
+  message = "Something went wrong.",
   onRetry,
 }: Props) {
   return (
     <View style={styles.container}>
-      <Text style={styles.emoji}>⚠️</Text>
+      <View style={styles.iconWrap}>
+        <Ionicons name="alert-circle-outline" size={40} color="#E53E3E" />
+      </View>
       <Text style={styles.title}>Oops!</Text>
       <Text style={styles.message}>{message}</Text>
       {onRetry && (
-        <TouchableOpacity style={styles.button} onPress={onRetry} activeOpacity={0.8}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={onRetry}
+          activeOpacity={0.8}
+        >
+          <Ionicons
+            name="refresh-outline"
+            size={16}
+            color="#fff"
+            style={styles.buttonIcon}
+          />
           <Text style={styles.buttonText}>Try Again</Text>
         </TouchableOpacity>
       )}
@@ -28,33 +41,45 @@ export function ErrorState({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: 32,
   },
-  emoji: { fontSize: 48, marginBottom: 12 },
+  iconWrap: {
+    width: 76,
+    height: 76,
+    borderRadius: 38,
+    backgroundColor: "#FFF5F5",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+  },
   title: {
-    fontSize: 22,
-    fontWeight: '700',
+    fontSize: 20,
+    fontWeight: "700",
     color: COLORS.textPrimary,
-    marginBottom: 8,
+    marginBottom: 6,
   },
   message: {
-    fontSize: 15,
+    fontSize: 14,
     color: COLORS.textSecondary,
-    textAlign: 'center',
-    lineHeight: 22,
+    textAlign: "center",
+    lineHeight: 20,
     marginBottom: 24,
   },
   button: {
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: COLORS.primary,
-    paddingHorizontal: 28,
-    paddingVertical: 12,
-    borderRadius: 24,
+    paddingHorizontal: 24,
+    paddingVertical: 11,
+    borderRadius: 999,
+    gap: 6,
   },
+  buttonIcon: {},
   buttonText: {
-    color: '#fff',
-    fontWeight: '700',
-    fontSize: 15,
+    color: "#fff",
+    fontWeight: "700",
+    fontSize: 14,
   },
 });

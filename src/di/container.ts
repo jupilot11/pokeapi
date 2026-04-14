@@ -9,6 +9,7 @@ import { PokemonApiService } from '@/src/data/services/pokemonApiService';
 import { PokemonRepositoryImpl } from '@/src/data/repositories/pokemonRepositoryImpl';
 import { GetPokemonListUseCase } from '@/src/domain/usecases/GetPokemonListUseCase';
 import { GetPokemonDetailUseCase } from '@/src/domain/usecases/GetPokemonDetailUseCase';
+import { GetPokemonDetailFullUseCase } from '@/src/domain/usecases/GetPokemonDetailFullUseCase';
 import { SearchPokemonUseCase } from '@/src/domain/usecases/SearchPokemonUseCase';
 
 // ── Infrastructure ──────────────────────────────────────────────────────────
@@ -18,4 +19,5 @@ const pokemonRepository = new PokemonRepositoryImpl(pokemonApiService);
 // ── Use Cases ───────────────────────────────────────────────────────────────
 export const getPokemonListUseCase = new GetPokemonListUseCase(pokemonRepository);
 export const getPokemonDetailUseCase = new GetPokemonDetailUseCase(pokemonRepository);
+export const getPokemonDetailFullUseCase = new GetPokemonDetailFullUseCase(pokemonRepository);
 export const searchPokemonUseCase = new SearchPokemonUseCase(pokemonRepository);

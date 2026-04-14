@@ -1,7 +1,7 @@
 import { COLORS } from "@/src/core/constants/app";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { Platform, StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 interface Props {
   value: string;
@@ -31,8 +31,16 @@ export function SearchBar({
         returnKeyType="search"
         autoCapitalize="none"
         autoCorrect={false}
-        clearButtonMode={Platform.OS === "ios" ? "while-editing" : "never"}
       />
+      {value.length > 0 && (
+        <TouchableOpacity
+          onPress={() => onChangeText("")}
+          hitSlop={8}
+          style={styles.clearBtn}
+        >
+          <Ionicons name="close-circle" size={18} color={COLORS.textSecondary} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -42,11 +50,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: COLORS.card,
-    borderRadius: 12,
+    borderRadius: 14,
     paddingHorizontal: 12,
-    paddingVertical: 10,
+    paddingVertical: 11,
     marginHorizontal: 16,
-    marginVertical: 10,
+    marginBottom: 12,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.06,
@@ -59,5 +67,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: COLORS.textPrimary,
     padding: 0,
+  },
+  clearBtn: {
+    marginLeft: 6,
   },
 });

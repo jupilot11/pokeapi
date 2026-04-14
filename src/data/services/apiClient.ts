@@ -7,19 +7,23 @@ const apiClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Request logger
+// Request logger (dev only)
 apiClient.interceptors.request.use((config) => {
-  const method = config.method?.toUpperCase() ?? 'GET';
-  console.log(`[API] --> ${method} ${config.baseURL ?? ''}${config.url ?? ''}`);
+  if (__DEV__) {
+    const method = config.method?.toUpperCase() ?? 'GET';
+    console.log(`[API] --> ${method} ${config.baseURL ?? ''}${config.url ?? ''}`);
+  }
   return config;
 });
 
-// Response interceptor: log + unwrap data, normalize errors
+// Response interceptor: log + normalize errors
 apiClient.interceptors.response.use(
   (response) => {
-    const { config, status } = response;
-    const method = config.method?.toUpperCase() ?? 'GET';
-    console.log(`[API] <-- ${status} ${method} ${config.url ?? ''}`);
+    if (__DEV__) {
+      const { config, status } = response;
+      const method = config.method?.toUpperCase() ?? 'GET';
+      console.log(`[API] <-- ${status} ${method} ${config.url ?? ''}`);
+    }
     return response;
   },
   (error) => {
@@ -27,7 +31,7 @@ apiClient.interceptors.response.use(
       const status = error.response?.status;
       const method = error.config?.method?.toUpperCase() ?? 'GET';
       const url = error.config?.url ?? '';
-      console.warn(`[API] ERR ${method} ${url} — ${status ?? error.code ?? error.message}`);
+      if (__DEV__) console.warn(`[API] ERR ${method} ${url} — ${status ?? error.code ?? error.message}`);
       if (status === 404) {
         return Promise.reject(new Error('Not found'));
       }

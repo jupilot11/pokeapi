@@ -69,14 +69,22 @@ export const usePokemonStore = create<PokemonStore>((set, get) => ({
     const { isLoadingMore, hasNextPage, offset } = get();
     if (isLoadingMore || !hasNextPage) return;
     set({ isLoadingMore: true });
+    // Capture the offset used for this fetch so the result handler always
+    // advances from the correct page, even if fetchInitial resets the store
+    // while this request is in flight.
+    const fetchedOffset = offset;
     try {
-      const result = await getPokemonListUseCase.execute(offset, DEFAULT_LIMIT);
-      set((state) => ({
-        pokemonList: [...state.pokemonList, ...result.items],
-        hasNextPage: result.hasNextPage,
-        offset: state.offset + DEFAULT_LIMIT,
-        isLoadingMore: false,
-      }));
+      const result = await getPokemonListUseCase.execute(fetchedOffset, DEFAULT_LIMIT);
+      set((state) => {
+        const existingIds = new Set(state.pokemonList.map((p) => p.id));
+        const fresh = result.items.filter((p) => !existingIds.has(p.id));
+        return {
+          pokemonList: [...state.pokemonList, ...fresh],
+          hasNextPage: result.hasNextPage,
+          offset: fetchedOffset + DEFAULT_LIMIT,
+          isLoadingMore: false,
+        };
+      });
     } catch (e) {
       set({ isLoadingMore: false, error: (e as Error).message });
     }

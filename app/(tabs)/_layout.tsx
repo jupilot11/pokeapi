@@ -1,41 +1,57 @@
-import { Tabs } from 'expo-router';
-import { Platform } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from '@/src/core/constants/app';
+import { COLORS } from "@/src/core/constants/app";
+import { Ionicons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
+import { Platform } from "react-native";
 
 export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
+        headerShown: false,
         tabBarActiveTintColor: COLORS.primary,
-        tabBarInactiveTintColor: '#999',
+        tabBarInactiveTintColor: "#ABABAB",
         tabBarStyle: Platform.select({
-          ios: { position: 'absolute', borderTopWidth: 0 },
-          default: { borderTopWidth: 0, elevation: 8 },
+          ios: {
+            position: "absolute",
+            borderTopWidth: 0,
+            borderRadius: 24,
+            marginHorizontal: 20,
+            marginBottom: 12,
+            height: 62,
+            paddingBottom: 10,
+            shadowColor: "#000",
+            shadowOpacity: 0.1,
+            shadowOffset: { width: 0, height: 4 },
+            shadowRadius: 16,
+          },
+          default: {
+            borderTopWidth: 0,
+            elevation: 10,
+            height: 60,
+            paddingBottom: 8,
+          },
         }),
-        tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
-        headerStyle: { backgroundColor: COLORS.primary },
-        headerTintColor: '#fff',
-        headerTitleStyle: { fontWeight: '700', fontSize: 18 },
+        tabBarLabelStyle: { fontSize: 11, fontWeight: "700" },
+        sceneStyle: { backgroundColor: COLORS.background },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Pokédex',
-          tabBarLabel: 'Pokédex',
+          title: "Pokédex",
+          tabBarLabel: "Pokédex",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="list" size={size} color={color} />
+            <Ionicons name="grid-outline" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="favorites"
         options={{
-          title: 'Favorites',
-          tabBarLabel: 'Favorites',
+          title: "Favorites",
+          tabBarLabel: "Favorites",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="heart" size={size} color={color} />
+            <Ionicons name="heart-outline" size={size} color={color} />
           ),
         }}
       />

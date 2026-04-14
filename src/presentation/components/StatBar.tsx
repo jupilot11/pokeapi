@@ -1,6 +1,6 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { STAT_COLORS, STAT_LABELS } from '@/src/core/constants/app';
+import { STAT_COLORS, STAT_LABELS } from "@/src/core/constants/app";
+import React, { useEffect, useRef } from "react";
+import { Animated, Easing, StyleSheet, Text, View } from "react-native";
 
 interface Props {
   name: string;
@@ -15,16 +15,32 @@ export const StatBar = React.memo(function StatBar({
   max = 255,
 }: Props) {
   const label = STAT_LABELS[name] ?? name.toUpperCase();
-  const color = STAT_COLORS[name] ?? '#A8A878';
+  const color = STAT_COLORS[name] ?? "#A8A878";
   const pct = Math.min(value / max, 1);
+
+  const animPct = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(animPct, {
+      toValue: pct,
+      duration: 700,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: false,
+    }).start();
+  }, [animPct, pct]);
+
+  const animatedWidth = animPct.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0%", "100%"],
+  });
 
   return (
     <View style={styles.row}>
       <Text style={styles.label}>{label}</Text>
       <Text style={styles.value}>{value}</Text>
       <View style={styles.track}>
-        <View
-          style={[styles.fill, { width: `${pct * 100}%`, backgroundColor: color }]}
+        <Animated.View
+          style={[styles.fill, { width: animatedWidth, backgroundColor: color }]}
         />
       </View>
     </View>
@@ -33,33 +49,33 @@ export const StatBar = React.memo(function StatBar({
 
 const styles = StyleSheet.create({
   row: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 10,
   },
   label: {
     width: 64,
     fontSize: 12,
-    fontWeight: '600',
-    color: '#555',
+    fontWeight: "600",
+    color: "#666",
   },
   value: {
     width: 32,
     fontSize: 13,
-    fontWeight: '700',
-    color: '#222',
-    textAlign: 'right',
+    fontWeight: "700",
+    color: "#1A1A1A",
+    textAlign: "right",
     marginRight: 10,
   },
   track: {
     flex: 1,
     height: 8,
-    backgroundColor: '#E8E8E8',
+    backgroundColor: "#EBEBEB",
     borderRadius: 4,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   fill: {
-    height: '100%',
+    height: "100%",
     borderRadius: 4,
   },
 });

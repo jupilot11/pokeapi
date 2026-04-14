@@ -4,6 +4,7 @@
     "slug": "pokeapi",
     "version": "1.0.0",
     "orientation": "portrait",
+    "backgroundColor": "#F2F2F2",
     "icon": "./assets/images/icon.png",
     "scheme": "pokeapi",
     "userInterfaceStyle": "automatic",

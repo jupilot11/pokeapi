@@ -8,6 +8,8 @@ export const ENDPOINTS = {
   pokemonList: (limit: number, offset: number) =>
     `/pokemon?limit=${limit}&offset=${offset}`,
   pokemonDetail: (idOrName: number | string) => `/pokemon/${idOrName}`,
+  pokemonSpecies: (idOrName: number | string) => `/pokemon-species/${idOrName}`,
+  evolutionChain: (id: number) => `/evolution-chain/${id}`,
 } as const;
 
 export const POKEMON_ARTWORK_URL = (id: number) =>

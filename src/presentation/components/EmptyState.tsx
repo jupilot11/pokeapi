@@ -1,19 +1,24 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { COLORS } from '@/src/core/constants/app';
+import { COLORS } from "@/src/core/constants/app";
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 interface Props {
   title?: string;
   message?: string;
+  icon?: keyof typeof Ionicons.glyphMap;
 }
 
 export function EmptyState({
-  title = 'No Pokémon found',
-  message = 'Try a different search term.',
+  title = "Nothing here",
+  message = "Try a different search term.",
+  icon = "search-outline",
 }: Props) {
   return (
     <View style={styles.container}>
-      <Text style={styles.emoji}>🔍</Text>
+      <View style={styles.iconWrap}>
+        <Ionicons name={icon} size={40} color={COLORS.textSecondary} />
+      </View>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.message}>{message}</Text>
     </View>
@@ -23,21 +28,30 @@ export function EmptyState({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: 32,
-    minHeight: 300,
+    minHeight: 280,
   },
-  emoji: { fontSize: 48, marginBottom: 12 },
+  iconWrap: {
+    width: 76,
+    height: 76,
+    borderRadius: 38,
+    backgroundColor: COLORS.border,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+  },
   title: {
-    fontSize: 20,
-    fontWeight: '700',
+    fontSize: 18,
+    fontWeight: "700",
     color: COLORS.textPrimary,
-    marginBottom: 8,
+    marginBottom: 6,
   },
   message: {
-    fontSize: 15,
+    fontSize: 14,
     color: COLORS.textSecondary,
-    textAlign: 'center',
+    textAlign: "center",
+    lineHeight: 20,
   },
 });

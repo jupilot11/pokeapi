@@ -1,19 +1,23 @@
-import { useEffect } from 'react';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { useFavoriteStore } from '@/src/presentation/store/favoriteStore';
-import { COLORS } from '@/src/core/constants/app';
+import { COLORS } from "@/src/core/constants/app";
+import { useFavoriteStore } from "@/src/presentation/store/favoriteStore";
+import { usePokemonDetailStore } from "@/src/presentation/store/pokemonDetailStore";
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
+import { View } from "react-native";
 
 export default function RootLayout() {
-  const hydrate = useFavoriteStore((s) => s.hydrate);
+  const hydrateFavorites = useFavoriteStore((s) => s.hydrate);
+  const hydrateDetailCache = usePokemonDetailStore((s) => s.hydrateCache);
 
-  // Restore persisted favorites from AsyncStorage on first mount
+  // Restore persisted data from AsyncStorage on first mount
   useEffect(() => {
-    hydrate();
-  }, [hydrate]);
+    hydrateFavorites();
+    hydrateDetailCache();
+  }, [hydrateFavorites, hydrateDetailCache]);
 
   return (
-    <>
+    <View style={{ flex: 1, backgroundColor: COLORS.background }}>
       <StatusBar style="light" />
       <Stack
         screenOptions={{
@@ -26,10 +30,12 @@ export default function RootLayout() {
           name="pokemon/[id]"
           options={{
             headerShown: false,
-            animation: 'slide_from_right',
+            statusBarStyle: "light",
+            animation: "fade",
+            contentStyle: { backgroundColor: COLORS.background },
           }}
         />
       </Stack>
-    </>
+    </View>
   );
 }

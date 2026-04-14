@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useFavorites } from "../hooks/useFavorites";
 import { useFavoriteStore } from "../store/favoriteStore";
 import { FavoriteButton } from "./FavoriteButton";
 import { PokemonTypeTag } from "./PokemonTypeTag";
@@ -23,9 +22,7 @@ interface Props {
 const CARD_WIDTH = (Dimensions.get("window").width - 48) / 2;
 
 export const PokemonCard = React.memo(function PokemonCard({ pokemon }: Props) {
-  const { toggleFavorite } = useFavorites();
-  // Selector-based subscription: Zustand re-renders this card only when
-  // THIS Pokémon's favorite status changes, not on every favorites update.
+  const toggleFavorite = useFavoriteStore((s) => s.toggleFavorite);
   const favorite = useFavoriteStore(
     useCallback(
       (s) => s.favorites.some((f) => f.id === pokemon.id),
@@ -52,12 +49,19 @@ export const PokemonCard = React.memo(function PokemonCard({ pokemon }: Props) {
       onPress={handlePress}
       activeOpacity={0.85}
     >
+      {/* Pokéball watermark */}
+      <View style={styles.pokeball} pointerEvents="none">
+        <View style={styles.pokeballTop} />
+        <View style={styles.pokeballBand} />
+        <View style={styles.pokeballCenter} />
+      </View>
+
       <View style={styles.header}>
         <Text style={styles.id}>{formatPokemonId(pokemon.id)}</Text>
         <FavoriteButton
           isFavorite={favorite}
           onToggle={handleFavorite}
-          size={20}
+          size={18}
         />
       </View>
 
@@ -66,7 +70,6 @@ export const PokemonCard = React.memo(function PokemonCard({ pokemon }: Props) {
         style={styles.image}
         contentFit="contain"
         transition={200}
-        placeholder={{ thumbhash: undefined }}
       />
 
       <View style={styles.footer}>
@@ -91,10 +94,50 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     overflow: "hidden",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 6,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.14,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  // Pokéball watermark (bottom-right corner)
+  pokeball: {
+    position: "absolute",
+    bottom: -18,
+    right: -18,
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    overflow: "hidden",
+    opacity: 0.18,
+    borderWidth: 5,
+    borderColor: "rgba(255,255,255,0.9)",
+  },
+  pokeballTop: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: "50%",
+    backgroundColor: "rgba(255,255,255,0.9)",
+  },
+  pokeballBand: {
+    position: "absolute",
+    top: "50%",
+    left: 0,
+    right: 0,
+    height: 7,
+    backgroundColor: "rgba(255,255,255,0.95)",
+    transform: [{ translateY: -3.5 }],
+  },
+  pokeballCenter: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: "rgba(255,255,255,0.95)",
+    transform: [{ translateX: -9 }, { translateY: -9 }],
   },
   header: {
     flexDirection: "row",
@@ -105,11 +148,12 @@ const styles = StyleSheet.create({
   id: {
     fontSize: 11,
     fontWeight: "700",
-    color: "rgba(0,0,0,0.35)",
+    color: "rgba(0,0,0,0.3)",
+    letterSpacing: 0.3,
   },
   image: {
     width: "100%",
-    height: 100,
+    height: 96,
     alignSelf: "center",
   },
   footer: {
@@ -119,7 +163,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "700",
     color: "#fff",
-    marginBottom: 6,
+    marginBottom: 5,
     textShadowColor: "rgba(0,0,0,0.2)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
@@ -128,5 +172,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "flex-start",
+    gap: 4,
   },
 });
