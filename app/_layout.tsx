@@ -25,6 +25,7 @@ export default function RootLayout() {
           contentStyle: { backgroundColor: COLORS.background },
         }}
       >
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
           name="pokemon/[id]"
